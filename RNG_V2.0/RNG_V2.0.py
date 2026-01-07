@@ -25,7 +25,29 @@ guess = None
 
 while guess != number_to_guess:
     try:
-        user_guess = int(input("Guess a number: "))
-        guess = user_guess
+        # We try to convert input to an integer
+        user_input = input("Guess a number: ")
+        guess = int(user_input)
 
+        # CONSTRAINT CHECK: This must be its own 'if' statement
+        if guess < 1 or guess > max_range:
+            raise IndexError(f"Out of range! Must be between 1 and {max_range}.")
+
+        attempts += 1
+
+        if guess < number_to_guess:
+            print("Too low!")
+        elif guess > number_to_guess:
+            print("Too high!")
+        else:
+            print(f"Correct! It took you {attempts} tries.")
+
+    except ValueError:
+        print(f"invalid input! Try again.")
+
+    except IndexError as e:
+        print(f"constraint error: {e}.")
+
+    finally:
+        print(f"(Current attempt count: {attempts}).")
 
