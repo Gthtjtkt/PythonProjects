@@ -1,0 +1,1 @@
+firstlist|E:\Python Projects\to_do_list\firstlist.txt
