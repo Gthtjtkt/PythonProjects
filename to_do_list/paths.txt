@@ -1,1 +1,2 @@
 firstlist|E:\Python Projects\to_do_list\firstlist.txt
+secondlist|E:\Python Projects\to_do_list\secondlist.txt
