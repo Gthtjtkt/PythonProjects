@@ -173,11 +173,19 @@ class TodoApp:
         self.label_status.config(text=f"Active list: {name}")
         self.task_listbox.delete(0, tk.END)
 
-if __name__ == "__main__":
 
-    # Create instance of the tkinter ui object and name it root
+# --- THE BOOTSTRAPPER ---
+# This line checks: "Is this file being run directly?" (instead of being imported).
+# It's the starting gun for your program.
+if __name__ == "__main__":
+    # 1. Initialize the Tkinter engine. 'root' is the actual OS-level window.
     root = tk.Tk()
 
-    # pass this
+    # 2. Create the App. We pass 'root' into 'TodoApp' so the class knows where to draw.
+    #    This triggers the __init__ method above.
     app = TodoApp(root)
+
+    # 3. root.mainloop() is an INFINITE LOOP.
+    #    It keeps the window open and waits for you to click something.
+    #    Without this, the window would pop up and close in 0.01 seconds.
     root.mainloop()
