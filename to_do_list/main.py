@@ -2,39 +2,71 @@
 
 import os
 import file_manager as fm
-import ui_utils as ui
 import tkinter as tk
 from tkinter import messagebox, simpledialog, filedialog
 
 class TodoApp:
+
+    # __init__ is a special method called a 'Constructor'.
+    # It runs AUTOMATICALLY the moment you create the app (app = TodoApp(root)).
+    # 'self' represents the specific instance of the app you are currently building.
+    # 'root' is the main window passed in from outside.
     def __init__(self, root):
+
+        # We store the window (root) inside 'self.root' so other functions can access it later.
         self.root = root
+
+        # Standard window setup: Title bar text and dimensions in pixels (Width x Height)
         self.root.title("Professional To-Do Manager")
         self.root.geometry("600x600")
 
-        # Assigning variables
+        # ------------------------- Assigning variables ------------------------
+        # We use 'self.' so these variables stay alive as long as the window is open.
+        # If we just used 'current_tasks' (without self), it would vanish after __init__ finishes.
         self.current_tasks = []
         self.current_filename = ""
         self.app_dir = fm.get_app_dir()
 
-        # ---------- UI Elements ------------
+        # ---------------------------- UI Elements ---------------------------
+        # tk.Label: A widget used to display text.
+        # root: Tells the label to live inside the main window.
+        # text: The initial words shown.
+        # fg: 'Foreground' color (the color of the text).
         self.label_status = tk.Label(root, text = "Active to do list: None", fg = "blue")
+
+        # .pack(): This is a 'Geometry Manager'. It actually places the widget on the window.
+        # pady=10: Adds 10 pixels of 'Padding' (empty space) above and below the label.
         self.label_status.pack(pady = 10)
 
-        # -------- Listbox to show tasks ---------
+        # -------------------- Listbox to show tasks --------------------
         # Is rendered above the options menu
         # Displays the tasks in the current list
+
+        # width/height: Measured in characters/lines, not pixels.
+        # width=50: About 50 characters wide. height=20: Shows 20 lines at a time.
         self.task_listbox = tk.Listbox(root, width=50, height=20)
+
+        # padx=15: Adds space on the left and right sides so it's not touching the window edges.
         self.task_listbox.pack(pady = 10, padx = 15)
 
-        # -------- Buttons --------------
+        # ----------------------------- Buttons ----------------------------
+        # tk.Button syntax:
+        # root: Put it in the main window.
+        # text: What is written on the button.
+        # command: THE MOST IMPORTANT PART. This tells Python which function to run
+        #          when the user clicks the button. Notice there are NO () after the function name.
+        #          We are passing the function like a recipe, not cooking it yet!
+
+        # .pack(fill="x"): Tells the button to stretch horizontally to fill the window.
+        # padx=50: Adds space on the sides so the button isn't stretched to the very edge.
         tk.Button(root, text="New List", command=self.create_new_list).pack(fill = "x", padx = 50)
         tk.Button(root, text="Load List", command=self.load_list).pack(fill = "x", padx = 50)
         tk.Button(root, text="Add Task", command=self.add_task).pack(fill = "x", padx = 50)
         tk.Button(root, text="Delete Task", command=self.delete_task).pack(fill = "x", padx = 50)
         tk.Button(root, text="Save Active List", command=self.save_list).pack(fill = "x", padx = 50)
 
-        # ------- Menu Bar ----------
+        # --------------------------- Menu Bar -----------------------
+        # Calls another function to build the top file menu.
         self.setup_menu()
 
     def setup_menu(self):
