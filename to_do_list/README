@@ -1,0 +1,49 @@
+TO-DO MANAGER PROJECT DOCUMENTATION
+---------------1. OVERVIEW
+This application is a local task management system built with Python. It uses a graphical user interface (GUI) to allow
+users to create, save, load, and manage multiple to-do lists. The project is designed with a modular architecture,
+separating the visual interface from the file storage logic.
+
+---------------2. FILE ARCHITECTURE
+To maintain professional standards, the project is divided into the following files:
+
+main.py: The entry point of the application. Contains the TodoApp class which manages the window, the buttons, and the
+overall coordination of the program.
+
+file_manager.py: Handles all disk operations. It is responsible for reading text files, writing task data, and
+maintaining the registry of created lists.
+
+ui_utils.py: Provides helper functions for graphical interactions, such as opening folder selection dialogs and
+validating console inputs.
+
+paths.txt: A system-generated file that acts as a central database for the locations of all task lists created by the
+user.
+
+---------------3. CORE FUNCTIONALITIES
+List Creation: Users can generate new .txt files within the application directory.
+
+Data Persistence: Tasks are saved to the hard drive in UTF-8 format, ensuring they are available after the program is
+closed.
+
+Task Management: Supports adding individual tasks, deleting selected items, and a "Clear All" function for resetting
+a list.
+
+Safe Operations: Utilizes confirmation dialogs for destructive actions (deleting/clearing) to protect user data.
+
+---------------4. INSTALLATION AND USAGE
+Ensure Python 3.x is installed on the system.
+
+Place all project files (main.py, file_manager.py, ui_utils.py) into a single dedicated folder.
+
+Open a command prompt or terminal in that folder.
+
+Execute the command: python main.py
+
+Use the on-screen buttons or the 'File' menu at the top to begin managing tasks.
+
+---------------5. TECHNICAL SPECIFICATIONS
+GUI Framework: Tkinter (Standard Python Library).
+
+Encoding: UTF-8 (Standard for text compatibility).
+
+Path Handling: Absolute pathing via the OS module to ensure portability across different directories.
