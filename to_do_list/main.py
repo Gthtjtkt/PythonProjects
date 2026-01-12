@@ -173,43 +173,61 @@ class TodoApp:
             self.task_listbox.delete(index)
 
     def save_list(self):
+        """
+        Takes the items in memory and writes them to the .txt file.
+        """
         if self.current_filename:
+            # We hand the work off to the file_manager.py 'Worker'
             fm.write_lines(self.current_filename, self.current_tasks)
             messagebox.showinfo("Success", f"List saved locally: {self.current_filename}")
         else:
             messagebox.showerror("Error", "No active list to save.")
 
     def load_list(self):
-
+        """
+        Opens a file browser to pick an existing .txt file and displays it.
+        """
+        # askopenfilename shows the standard Windows 'Open File' window
         filepath = filedialog.askopenfilename(
             title="Load To-Do List:",
-            initialdir=self.app_dir,
-            filetypes=[("Test Files", "*.txt")]
+            initialdir=self.app_dir, # Start looking in our app folder
+            filetypes=[("Test Files", "*.txt")] # Only show .txt files
         )
 
-        if not filepath:
+        if not filepath: # If user hits 'Cancel'
             return
 
         try:
+            # Ask file_manager to read the file
             tasks = fm.read_lines(filepath)
 
+            # Update the App's memory
             self.current_filename = filepath
             self.current_tasks = tasks
 
+            # SYNCING THE UI:
+            # 1. Clear the old tasks out of the Listbox
             self.task_listbox.delete(0, tk.END)
+            # 2. Loop through the new tasks and add them to the box
             for task in tasks:
                 self.task_listbox.insert(tk.END, task)
 
+            # Update the label to show the name of the file (basename removes the C:/... part)
             list_name = os.path.basename(filepath)
             self.label_status.config(text=f"Active List: {list_name}")
 
             messagebox.showinfo("Loaded", f"Loaded List: {list_name}")
 
         except Exception as e:
+            # If the file is corrupted or locked, catch the error so the app doesn't crash
             messagebox.showerror("Error", f"Error while loading list: \n{e}")
 
     def update_ui(self, name):
+        """
+        A helper function to refresh the screen.
+        """
         self.label_status.config(text=f"Active list: {name}")
+        # Delete from index 0 to the very end (clears the whole box)
         self.task_listbox.delete(0, tk.END)
 
 
