@@ -63,6 +63,7 @@ class TodoApp:
         tk.Button(root, text="Load List",        command=self.load_list).pack(fill = "x", padx = 50)
         tk.Button(root, text="Add Task",         command=self.add_task).pack(fill = "x", padx = 50)
         tk.Button(root, text="Delete Task",      command=self.delete_task).pack(fill = "x", padx = 50)
+        tk.Button(root, text="Clear All Tasks", command=self.clear_all_tasks, fg="red").pack(fill="x", padx=50)
         tk.Button(root, text="Save Active List", command=self.save_list).pack(fill = "x", padx = 50)
 
         # --------------------------- Menu Bar -----------------------
@@ -72,6 +73,7 @@ class TodoApp:
     def setup_menu(self):
         """
         Creates the top horizontal menu bar (File, Edit, etc.).
+        This is in the top left corner of the window
         """
         # 1. Create the main bar that sits at the very top
         menubar = tk.Menu(self.root)
@@ -171,6 +173,32 @@ class TodoApp:
 
             # .delete() removes the item from the Tkinter Listbox visually
             self.task_listbox.delete(index)
+
+    def clear_all_tasks(self):
+        """
+        Wipes the current list from the UI, the memory, and the disk.
+        """
+        if not self.current_filename:
+            messagebox.showerror("Error", "No active list to clear.")
+            return
+
+        # 1. Ask for confirmation (Safety first!)
+        confirm = messagebox.askyesno(
+            "Clear Everything?",
+            "Are you sure you want to delete ALL tasks in this list?\nThis cannot be undone."
+        )
+
+        if confirm:
+            # 2. Wipe the memory (the Python list)
+            self.current_tasks = []
+
+            # 3. Wipe the UI (the Listbox)
+            self.task_listbox.delete(0, tk.END)
+
+            # 4. Wipe the Disk (the .txt file)
+            fm.clear_file_on_disk(self.current_filename)
+
+            messagebox.showinfo("Cleared", "The list is now empty.")
 
     def save_list(self):
         """
