@@ -41,6 +41,7 @@ class TodoApp:
         # -------------------- Listbox to show tasks --------------------
         # Is rendered above the options menu
         # Displays the tasks in the current list
+        # is the big central display on the app window with all of the tasks in the list
 
         # width/height: Measured in characters/lines, not pixels.
         # width=50: About 50 characters wide. height=20: Shows 20 lines at a time.
@@ -59,12 +60,12 @@ class TodoApp:
 
         # .pack(fill="x"): Tells the button to stretch horizontally to fill the window.
         # padx=50: Adds space on the sides so the button isn't stretched to the very edge.
-        tk.Button(root, text="New List",         command=self.create_new_list).pack(fill = "x", padx = 50)
-        tk.Button(root, text="Load List",        command=self.load_list).pack(fill = "x", padx = 50)
-        tk.Button(root, text="Add Task",         command=self.add_task).pack(fill = "x", padx = 50)
-        tk.Button(root, text="Delete Task",      command=self.delete_task).pack(fill = "x", padx = 50)
-        tk.Button(root, text="Clear All Tasks", command=self.clear_all_tasks, fg="red").pack(fill="x", padx=50)
-        tk.Button(root, text="Save Active List", command=self.save_list).pack(fill = "x", padx = 50)
+        tk.Button(root, text="New List",         command=self.create_new_list)          .pack(fill = "x", padx = 50)
+        tk.Button(root, text="Load List",        command=self.load_list)                .pack(fill = "x", padx = 50)
+        tk.Button(root, text="Add Task",         command=self.add_task)                 .pack(fill = "x", padx = 50)
+        tk.Button(root, text="Delete Task",      command=self.delete_task)              .pack(fill = "x", padx = 50)
+        tk.Button(root, text="Clear All Tasks",  command=self.clear_all_tasks, fg="red").pack(fill = "x", padx = 50)
+        tk.Button(root, text="Save Active List", command=self.save_list)                .pack(fill = "x", padx = 50)
 
         # --------------------------- Menu Bar -----------------------
         # Calls another function to build the top file menu.
