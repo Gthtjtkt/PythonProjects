@@ -59,10 +59,10 @@ class TodoApp:
 
         # .pack(fill="x"): Tells the button to stretch horizontally to fill the window.
         # padx=50: Adds space on the sides so the button isn't stretched to the very edge.
-        tk.Button(root, text="New List", command=self.create_new_list).pack(fill = "x", padx = 50)
-        tk.Button(root, text="Load List", command=self.load_list).pack(fill = "x", padx = 50)
-        tk.Button(root, text="Add Task", command=self.add_task).pack(fill = "x", padx = 50)
-        tk.Button(root, text="Delete Task", command=self.delete_task).pack(fill = "x", padx = 50)
+        tk.Button(root, text="New List",         command=self.create_new_list).pack(fill = "x", padx = 50)
+        tk.Button(root, text="Load List",        command=self.load_list).pack(fill = "x", padx = 50)
+        tk.Button(root, text="Add Task",         command=self.add_task).pack(fill = "x", padx = 50)
+        tk.Button(root, text="Delete Task",      command=self.delete_task).pack(fill = "x", padx = 50)
         tk.Button(root, text="Save Active List", command=self.save_list).pack(fill = "x", padx = 50)
 
         # --------------------------- Menu Bar -----------------------
@@ -70,67 +70,106 @@ class TodoApp:
         self.setup_menu()
 
     def setup_menu(self):
+        """
+        Creates the top horizontal menu bar (File, Edit, etc.).
+        """
+        # 1. Create the main bar that sits at the very top
         menubar = tk.Menu(self.root)
 
-        # File Menu
-        # Appears in the top right corner of the window
+        # 2. Create a 'dropdown' menu.
+        # 'tearoff=0' prevents the user from popping the menu out into a separate window.
         file_menu = tk.Menu(menubar, tearoff = 0)
-        file_menu.add_command(label = "New List", command=self.create_new_list)
-        file_menu.add_command(label='Save', command=self.save_list)
-        file_menu.add_command(label='Load', command=self.load_list)
+
+        # 3. Add individual clickable options to the dropdown
+        file_menu.add_command(label="New List",    command=self.create_new_list)
+        file_menu.add_command(label='Save',        command=self.save_list)
+        file_menu.add_command(label='Load',        command=self.load_list)
         file_menu.add_command(label='Delete Task', command=self.delete_task)
+
+        # 4. A separator is just a horizontal line to organize the menu visually
         file_menu.add_separator()
-        file_menu.add_command(label='Exit', command=self.root.quit)
+        file_menu.add_command(label='Exit',        command=self.root.quit)
+
+        # 5. 'Cascade' creates the 'File' button that you click to see the menu
         menubar.add_cascade(label='File', menu=file_menu)
 
+        # 6. Tell the main window to actually display this menubar
         self.root.config(menu=menubar)
 
     def create_new_list(self):
+        """
+        Handles naming a new file and clearing the current workspace.
+        """
+        # simpledialog.askstring pops up a tiny window with a text box
         name = simpledialog.askstring("New List", "Please enter the name of the list:")
-        if name:
-            # force storage into the app's folder
+
+        if name: # If the user didn't hit 'Cancel'
+            # os.path.join handles the backslashes (/) correctly for Windows or Mac
             filename = os.path.join(self.app_dir, f"{name}.txt")
+
+            # Update the App's memory
             self.current_filename = filename
             self.current_tasks = []
+
+            # Clear the screen and update the blue label
             self.update_ui(name)
+
+            # Write this new path into your paths.txt log
             fm.log_metadata(name, filename)
             messagebox.showinfo("Success", f"List created locally: {name}.txt")
 
     def add_task(self):
+        """
+        Adds a new item to the internal list AND the visual listbox.
+        """
+        # Error Handling: Check if a file is actually open before adding tasks
         if not self.current_filename:
             messagebox.showerror("Error", "Create a list first.")
-            return
+            return # Stop the function here
+
         task = simpledialog.askstring("Add Task", "Please enter the name of the task:")
+
         if task:
+            # Add to the Python list (data memory)
             self.current_tasks.append(task)
+            # Add to the Tkinter Listbox (visual display)
+            # tk.END tells it to put the new task at the very bottom
             self.task_listbox.insert(tk.END, task)
 
     def delete_task(self):
-        # make sure list isn't active
+        """
+        Identifies the highlighted task and removes it from memory and UI.
+        """
         if not self.current_filename:
             messagebox.showerror("Error", "No Active List.")
             return
 
         # make sure task is selected
+        # .curselection() returns a TUPLE of the index numbers of highlighted items.
+        # Example: if you click the first item, selection is (0,)
         selection = self.task_listbox.curselection() # user selects what task to delete with their cursor
+
         if not selection:
             messagebox.showwarning("No Selection", "Select a task to delete.")
             return
 
+        # Extract the index number (0, 1, 2...) from the tuple
         index = selection[0]
+
+        # Look up the text of that task in our memory list
         task = self.current_tasks[index]
 
-        # Confirm the user actually wants to delete the task
+        # askyesno returns True (Yes) or False (No)
         confirm = messagebox.askyesno(
             "Confirm delete",
             f"Delete this task? \n\n{task}"
         )
 
         if confirm:
-            # remove from list
+            # .pop() removes the item from the Python list
             self.current_tasks.pop(index)
 
-            # Remove from UI
+            # .delete() removes the item from the Tkinter Listbox visually
             self.task_listbox.delete(index)
 
     def save_list(self):
